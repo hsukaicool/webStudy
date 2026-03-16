@@ -1,0 +1,24 @@
+@use '../variables/color' as *;
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // 使用陰影增加立體感
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); // 滑過疊加的陰影
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        color: $text-primary;
+        margin-bottom: 15px;
+    }
+
+    &__content {
+        color: $text-secondary;
+    }
+}

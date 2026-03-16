@@ -1,0 +1,26 @@
+// 用來存放「會重複使用的 SCSS 函數」。最常見的就是 RWD 響應式斷點設定
+
+// 定義 RWD 斷點
+$breakpoints: (
+    'sm': 576px,
+    // 手機版
+    'md': 768px,
+    // 平板版
+    'lg': 992px,
+    // 一般電腦
+    'xl': 1200px // 大螢幕
+);
+
+// RWD 響應式 Mixin
+// 使用方式：@include respond-to('md') { ... }
+@mixin respond-to($breakpoint) {
+    @if map-has-key($breakpoints, $breakpoint) {
+        @media (min-width: map-get($breakpoints, $breakpoint)) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "找不到斷點：#{$breakpoint}。";
+    }
+}

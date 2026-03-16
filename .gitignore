@@ -1,0 +1,33 @@
+# =========================
+# 1. 前端忽略清單 (React/Vite)
+# =========================
+frontend/template/node_modules/
+frontend/template/dist/
+frontend/template/dist-ssr/
+frontend/template/*.local
+frontend/template/npm-debug.log*
+
+# =========================
+# 2. 後端忽略清單 (Java/Spring Boot)
+# =========================
+# 忽略編譯後的暫存檔 (最重要！)
+backend/target/
+*.class
+
+# 忽略打包後的執行檔
+*.jar
+*.war
+
+# 忽略環境變數與敏感設定 (如果你之後有寫 .env)
+.env
+*.properties.local
+
+# =========================
+# 3. 編輯器與系統垃圾檔 (共用)
+# =========================
+.idea/
+.vscode/
+*.suo
+*.sln
+.DS_Store
+._*

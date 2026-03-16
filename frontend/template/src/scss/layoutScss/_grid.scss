@@ -1,0 +1,8 @@
+// 這個部分是專案中負責全站置中、處理左右留白的靈魂元件：
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; // 讓區塊水平置中
+    padding: 0 15px;
+}

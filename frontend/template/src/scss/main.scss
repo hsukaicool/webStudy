@@ -1,0 +1,27 @@
+// 1. 先載入基礎設定 (Variables)
+@use 'variables/color' as *;
+@use 'variables/typography' as *;
+
+// 2. 載入重置與全域樣式 (Base)
+@use 'base/reset';
+@use 'base/global';
+
+// 3. 載入版面配置 (Layout)
+@use 'layoutScss/navbar';
+@use 'layoutScss/footer';
+@use 'layoutScss/grid';
+
+// 4. 載入元件 (Components) -> 修改資料夾名稱
+@use 'componentsScss/button';
+@use 'componentsScss/card';
+
+// 5. 載入頁面樣式 (Pages) -> 修改資料夾與檔案名稱
+@use 'pagesScss/home'; // 原本寫 @use '/Home' 是錯的
+@use 'pagesScss/login';
+@use 'pagesScss/register';
+@use 'pagesScss/about';
+@use 'pagesScss/profile';
+@use 'pagesScss/productDetail';
+
+// 6. 載入 RWD 混入 (Mixins)
+@use 'mixins/respond-to';

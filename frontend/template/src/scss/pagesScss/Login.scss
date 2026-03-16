@@ -1,0 +1,326 @@
+// 若有全域變數可以 import 近來，例如 @import '../../scss/variables';
+@use "sass:color";
+$primary-color: #d1bfae; // 請替換成您的 text-primary / bg-primary
+$primary-hover: color.adjust($primary-color, $blue: -10%); // 改成最新寫法
+$bg-light: #f8f9fa; // bg-background-light
+$text-main: #333333; // text-text-main
+$text-muted: #6b7280; // text-text-muted
+$border-color: #e5e7eb; // border-neutral-warm
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    background-color: $bg-light;
+}
+
+// 左側：品牌形象區塊
+.login-banner {
+    display: none; // 手機版隱藏
+
+    @media (min-width: 1024px) {
+        // lg
+        display: flex;
+        width: 50%;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background-color: rgba($border-color, 0.2);
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    &__content {
+        position: relative;
+        z-index: 10;
+        padding: 3rem;
+        color: white;
+        max-width: 32rem; // max-w-lg
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 3rem;
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        .icon-gem {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+        }
+    }
+
+    &__title {
+        font-size: 3rem; // text-5xl
+        font-weight: bold;
+        line-height: 1.25;
+        margin-bottom: 1.5rem;
+    }
+
+    &__description {
+        font-size: 1.125rem; // text-lg
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.625;
+    }
+}
+
+// 右側：表單區塊
+.login-form-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+
+    @media (min-width: 640px) {
+        padding: 3rem;
+    }
+
+    @media (min-width: 768px) {
+        padding: 6rem;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 28rem; // max-w-md
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; // gap-8
+}
+
+// 手機版 Logo
+.mobile-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $primary-color;
+    text-decoration: none;
+    margin-bottom: 1rem;
+
+    @media (min-width: 1024px) {
+        display: none;
+    }
+
+    .icon-gem {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .logo-text {
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 0.15em;
+        color: $text-main;
+    }
+}
+
+// 表單標題
+.login-header {
+    &__title {
+        font-size: 1.875rem; // text-3xl
+        font-weight: bold;
+        color: $text-main;
+        margin-bottom: 0.5rem;
+    }
+
+    &__subtitle {
+        color: $text-muted;
+    }
+}
+
+// 表單輸入區
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; // gap-5
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; // gap-2
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.form-label {
+    font-size: 0.875rem; // text-sm
+    font-weight: bold;
+    color: $text-main;
+}
+
+.forgot-password {
+    font-size: 0.875rem;
+    color: $primary-color;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: $text-muted;
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem; // pl-11
+    border-radius: 0.75rem; // rounded-xl
+    border: 1px solid $border-color;
+    background-color: white;
+    outline: none;
+    transition: all 0.3s ease;
+
+    &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 1px $primary-color;
+    }
+}
+
+// 按鈕
+.btn-submit {
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: $primary-color;
+    color: white;
+    font-weight: bold;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba($primary-color, 0.2);
+
+    &:hover {
+        background-color: $primary-hover;
+    }
+
+    .icon-arrow {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+// 分隔線
+.divider {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+
+    &__line {
+        flex-grow: 1;
+        border-top: 1px solid $border-color;
+    }
+
+    &__text {
+        flex-shrink: 0;
+        margin: 0 1rem;
+        color: $text-muted;
+        font-size: 0.875rem;
+    }
+}
+
+// 社群登入按鈕
+.social-login {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid $border-color;
+    border-radius: 0.75rem;
+    background-color: transparent;
+    color: $text-main;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba($border-color, 0.3);
+    }
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+// 註冊提示區塊
+.register-prompt {
+    text-align: center;
+    color: $text-muted;
+    margin-top: 1rem;
+}
+
+.register-link {
+    color: $primary-color;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

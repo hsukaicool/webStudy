@@ -1,0 +1,21 @@
+// 用來進行跨瀏覽器的樣式重置 (Reset)，以及給予 HTML 基礎標籤屬性
+
+// 全站基礎 Reset
+*,
+*::before,
+*::after {
+    box-sizing: border-box; // 確保 padding 與 border 不會改變元素總寬度
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+ul,
+ol {
+    list-style: none; // 拿掉清單預設的小圓點
+}

@@ -1,0 +1,23 @@
+// 存放字型家族、大小與行高
+
+// 字體家族設定 (優先載入無襯線與常用中文字體)
+$font-family-base: 'Helvetica Neue', Arial, 'LiHei Pro', '微軟正黑體', sans-serif;
+
+// 字體大小與粗細基準
+$font-size-base: 16px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// 行高基準
+$line-height-base: 1.5;
+
+// 1. 定義精品級的字體清單
+// 優先使用精美的無襯線字體，並針對中文字體進行優化
+$font-family-display: 'Inter', 'Plus Jakarta Sans', 'Outfit', 'PingFang TC', 'Noto Sans TC', sans-serif;
+$font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+
+// 2. 實作你剛才問的那個 Class 效果
+.font-display {
+    font-family: $font-family-display;
+    letter-spacing: 0.15em; // 這是圖片中讓文字變得很高級的關鍵！
+}

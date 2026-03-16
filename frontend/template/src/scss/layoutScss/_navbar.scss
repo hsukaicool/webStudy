@@ -1,0 +1,203 @@
+@use "sass:color";
+@use "../variables/color" as *;
+@use "../variables/typography" as *;
+
+// 確保手機版如果空間不足可以隱藏或簡化
+@media (max-width: 768px) {
+    .become-seller-btn span {
+        display: none; // 手機版只留圖標或直接隱藏
+    }
+}
+
+.navbar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+
+    &.navbar-home {
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    &.navbar-default {
+        background-color: white;
+        border-bottom-color: $border-light;
+    }
+
+    .navbar-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.5rem;
+
+        @media (min-width: 768px) {
+            padding: 0 5rem; // 對齊 Home 的 px-20
+        }
+    }
+
+    .navbar-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: $text-main;
+            text-decoration: none;
+            transition: opacity 0.2s;
+
+            .logo-icon {
+                color: $warning-color;
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+                font-weight: 700;
+                line-height: 1;
+                // font-display class will handle the font-family and letter-spacing
+            }
+
+            &:hover {
+                opacity: 0.7;
+            }
+
+            .become-seller-btn {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                background-color: var(--primary-light, #f0f7ff); // 淡淡的底色
+                color: var(--primary, #0066cc);
+                border-radius: 999px;
+                font-size: 14px;
+                font-weight: 600;
+                margin-left: 1.5rem;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background-color: var(--primary, #0066cc);
+                    color: white;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+                }
+            }
+
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+
+            @media (min-width: 1024px) {
+                display: none;
+            }
+        }
+    }
+
+
+    .navbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        @media (min-width: 768px) {
+            gap: 1.5rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            &.desktop-only {
+                display: none;
+
+                @media (min-width: 1024px) {
+                    display: flex;
+                }
+            }
+
+            .search-icon {
+                position: absolute;
+                left: 1rem;
+                color: $text-muted;
+                pointer-events: none;
+            }
+
+            .search-input {
+                background-color: $bg-neutral-warm;
+                border: 1px solid transparent;
+                padding: 0.6rem 1rem 0.6rem 2.75rem;
+                border-radius: 999px;
+                width: 200px;
+                font-size: 0.875rem;
+                transition: all 0.3s ease;
+
+                &:focus {
+                    outline: none;
+                    background-color: white;
+                    border-color: $primary-color;
+                    width: 240px;
+                }
+            }
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: $text-main;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s, color 0.2s;
+
+            &:hover {
+                color: $primary-color;
+                transform: translateY(-2px);
+            }
+
+            &.mobile-only {
+                @media (min-width: 1024px) {
+                    display: none;
+                }
+            }
+
+            &.cart-btn {
+                position: relative;
+
+                .cart-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: $primary-color;
+                    color: white;
+                    font-size: 0.65rem;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+// 載入變數，設定全站基礎共用樣式
+
+// 注意：在這裡引入變數，讓這個檔案看得懂
+@use '../variables/color' as *;
+@use "sass:color";
+
+@use '../variables/typography' as *;
+
+body {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $text-primary;
+    background-color: $bg-light;
+    -webkit-font-smoothing: antialiased; // 讓字體在 Mac 會比較平滑好看
+}
+
+a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: color.adjust($primary-color, $lightness: -10%);
+
+        text-decoration: underline;
+    }
+}

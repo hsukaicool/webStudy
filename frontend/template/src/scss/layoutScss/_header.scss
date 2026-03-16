@@ -1,0 +1,25 @@
+@use '../variables/color' as *;
+
+.header {
+    width: 100%;
+    background-color: $bg-dark;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .nav {
+        display: flex;
+        gap: 15px; // 輕鬆產生間距
+
+        a {
+            color: #fff;
+
+            &:hover {
+                color: $primary-color;
+                text-decoration: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,138 @@
+// src/scss/layoutScss/_footer.scss
+@use "sass:color";
+@use "../variables/color" as *;
+
+.site-footer {
+    background-color: white;
+    padding: 5rem 1.5rem 3rem;
+    border-top: 1px solid $border-light;
+
+    &.footer-home {
+        background-color: $bg-neutral-warm; // 首頁通常有特別背景色
+        border-top: none;
+    }
+
+    .footer-container {
+        max-width: 1440px;
+        margin: 0 auto;
+
+        @media (min-width: 768px) {
+            padding: 0 5rem;
+        }
+    }
+
+    .footer-main {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        margin-bottom: 5rem;
+
+        @media (min-width: 1024px) {
+            grid-template-columns: 350px 1fr;
+            gap: 6rem;
+        }
+    }
+
+    .footer-brand {
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            color: $text-main;
+        }
+
+        .footer-tagline {
+            color: $text-muted;
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1.5rem;
+
+            a {
+                color: $text-main;
+                transition: color 0.2s, transform 0.2s;
+
+                &:hover {
+                    color: $primary-color;
+                    transform: translateY(-3px);
+                }
+            }
+        }
+    }
+
+    .footer-nav-groups {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+
+        @media (min-width: 640px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 1280px) {
+            grid-template-columns: 1fr 1fr 1.5fr;
+        }
+
+        .nav-group {
+            h3 {
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: $text-main;
+            }
+
+            a {
+                display: block;
+                text-decoration: none;
+                color: $text-muted;
+                font-size: 0.95rem;
+                margin-bottom: 1rem;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: $text-main;
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        padding-top: 3rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .copyright {
+            color: $text-muted;
+            font-size: 0.875rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+
+            a {
+                text-decoration: none;
+                color: $text-muted;
+                font-size: 0.875rem;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: $text-main;
+                }
+            }
+        }
+    }
+}

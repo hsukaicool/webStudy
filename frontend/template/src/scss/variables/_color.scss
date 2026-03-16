@@ -1,0 +1,28 @@
+// 用來存放全站共用的設定值，所有的顏色與字型都該統一在這裡管控。
+
+// 主色：深黑色作為品牌核心
+$primary-color: #000000;
+$secondary-color: #6c757d;
+
+// 狀態顏色 (成功、警告、錯誤等)
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+
+// 字體與背景色 - Swutch Premium 配置
+$text-main: #111111;
+$text-muted: #666666;
+$text-primary: #111111; // 相容舊版全域樣式
+$text-secondary: #666666; // 相容舊版全域樣式
+
+$bg-light: #ffffff;
+$bg-dark: #111111;
+
+// 這套設計的靈魂：暖灰色背景 (Swutch Original)
+$bg-neutral-warm: #F4F0EB;
+$bg-warm: #F4F0EB; // 保持相容性
+
+// 邊框與其他
+$border-light: #e5e7eb;
+$border-neutral: rgba(0, 0, 0, 0.1);

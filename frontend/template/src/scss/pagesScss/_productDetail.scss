@@ -1,0 +1,294 @@
+// src/scss/page/ProductDetail.scss
+
+.product-detail {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--background-light); // 建議使用專案變數
+    overflow-x: hidden;
+
+    &__main {
+        max-width: 80rem; // 7xl: 1280px
+        margin: 0 auto;
+        padding: 2rem 1rem; // py-8 px-4
+
+        @media (min-width: 768px) {
+            padding-left: 5rem; // md:px-20
+            padding-right: 5rem;
+        }
+    }
+
+    &__breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        font-size: 0.875rem;
+        color: #64748b; // slate-500
+
+        a {
+            transition: color 0.2s;
+
+            &:hover {
+                color: var(--primary);
+            }
+        }
+
+        &--current {
+            color: #0f172a; // slate-900
+            font-weight: 600;
+        }
+    }
+
+    &__layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+
+        @media (min-width: 1024px) {
+            grid-template-columns: repeat(12, 1fr);
+        }
+    }
+
+    // 左側展示欄
+    &__gallery {
+        @media (min-width: 1024px) {
+            grid-column: span 7;
+        }
+
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        &-main {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(var(--primary-rgb), 0.1);
+            background-color: white;
+            position: relative;
+
+            &-img {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center;
+                transition: transform 0.7s;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+        }
+
+        &-thumbs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+
+            &-item {
+                aspect-ratio: 1 / 1;
+                border-radius: 1rem;
+                overflow: hidden;
+                border: 1px solid rgba(var(--primary-rgb), 0.1);
+                cursor: pointer;
+                background-size: cover;
+                background-position: center;
+                transition: all 0.2s;
+
+                &--active {
+                    border: 2px solid var(--primary);
+                }
+
+                &:not(.--active):hover {
+                    border-color: rgba(var(--primary-rgb), 0.4);
+                }
+
+                &--more {
+                    background-color: #f1f5f9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--primary);
+                    font-weight: bold;
+
+                    &:hover {
+                        background-color: #e2e8f0;
+                    }
+                }
+            }
+        }
+    }
+
+    // 右側資訊欄
+    &__info {
+        @media (min-width: 1024px) {
+            grid-column: span 5;
+        }
+
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        &-header {
+            &-badge {
+                display: inline-block;
+                background: rgba(var(--primary-rgb), 0.1);
+                color: var(--primary);
+                font-size: 0.75rem;
+                font-weight: bold;
+                padding: 0.25rem 0.75rem;
+                border-radius: 9999px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-right: 0.5rem;
+            }
+
+            &-meta {
+                color: #94a3b8;
+                font-size: 0.875rem;
+            }
+        }
+
+        &-title {
+            font-size: 2.25rem;
+
+            @media (min-width: 768px) {
+                font-size: 3rem;
+            }
+
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.1;
+            margin: 0.75rem 0;
+        }
+
+        &-price {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+
+            &-current {
+                font-size: 3rem;
+                color: var(--primary);
+                font-weight: 500;
+            }
+
+            &-original {
+                font-size: 1.125rem;
+                color: #94a3b8;
+                text-decoration: line-through;
+            }
+        }
+
+        &-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+    }
+
+    // 提示卡片
+    &__tips {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+        background: rgba(var(--primary-rgb), 0.05);
+        border: 1px solid rgba(var(--primary-rgb), 0.2);
+        display: flex;
+        gap: 1.25rem;
+
+        &-icon {
+            padding: 0.75rem;
+            background: rgba(var(--primary-rgb), 0.2);
+            border-radius: 1rem;
+            color: var(--primary);
+        }
+
+        &-content {
+            h4 {
+                font-size: 1.125rem;
+                font-weight: bold;
+                margin-bottom: 0.25rem;
+            }
+
+            p {
+                font-size: 0.875rem;
+                color: #475569;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+        }
+
+        &-list {
+            display: grid;
+            grid-template-columns: 1fr;
+
+            @media (min-width: 768px) {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            gap: 0.75rem;
+            list-style: none;
+            padding: 0;
+
+            li {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.875rem;
+                color: #334155;
+            }
+        }
+    }
+
+    // 其他區塊... (建議以此類推)
+}
+
+// 按钮樣式抽象
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+
+    &--primary {
+        width: 100%;
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(var(--primary-rgb), 0.2);
+
+        &:hover {
+            background-color: rgba(var(--primary-rgb), 0.9);
+        }
+    }
+
+    &--dark {
+        background-color: #0f172a;
+        color: white;
+
+        &:hover {
+            background-color: #1e293b;
+        }
+    }
+
+    &--outline {
+        background-color: white;
+        border: 2px solid #e2e8f0;
+        color: #0f172a;
+
+        &:hover {
+            border-color: #cbd5e1;
+        }
+    }
+}

@@ -1,0 +1,451 @@
+// src/scss/pagesScss/_sellerProducts.scss
+@use '../variables/color' as *;
+@use '../mixins/respond-to' as *;
+
+// 賣家中心專屬深色調
+$seller-card-bg: #1c1917; // Stone 900
+$seller-input-bg: #0c0a09; // Stone 950
+$seller-border: #292524; // Stone 800
+$seller-text-main: #fafaf9; // Stone 50
+$seller-text-muted: #a8a29e; // Stone 400
+$seller-accent: #10b981; // Emerald 500
+
+.seller-products {
+    max-width: 72rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    // 🚀 高質感 Loading 畫面樣式
+    &__loading {
+        min-height: 20rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        color: $seller-text-muted;
+        background-color: $seller-card-bg;
+        border-radius: 1.5rem;
+        border: 1px solid $seller-border;
+        margin-top: 1rem;
+        animation: fadeIn 0.4s ease;
+
+        .spinner {
+            color: $seller-accent; // 使用綠色
+            animation: spin 1s linear infinite; // 自定義旋轉動畫
+            filter: drop-shadow(0 0 8px rgba($seller-accent, 0.3));
+        }
+
+        p {
+            font-size: 0.9375rem;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+    }
+
+    // 旋轉動畫定義 (若已有可省略)
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    // 頭部搜尋與操作區
+    &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        @include respond-to('md') {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &__search-group {
+        display: flex;
+        flex: 1;
+        gap: 1rem;
+        width: 100%;
+
+        @include respond-to('md') {
+            width: auto;
+            max-width: 40rem;
+        }
+    }
+
+    &__search-container {
+        position: relative;
+        flex: 1;
+    }
+
+    &__search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $seller-text-muted;
+    }
+
+    &__search-input {
+        width: 100%;
+        padding: 0.625rem 1rem 0.625rem 2.5rem;
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 0.75rem;
+        color: $seller-text-main;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+
+        &::placeholder {
+            color: $seller-text-muted;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: rgba($seller-accent, 0.5);
+            box-shadow: 0 0 0 1px rgba($seller-accent, 0.5);
+        }
+    }
+
+    &__filter {
+        padding: 0 1rem;
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 0.75rem;
+        color: $seller-text-main;
+        font-size: 0.875rem;
+        cursor: pointer;
+        outline: none;
+
+        &:focus {
+            border-color: rgba($seller-accent, 0.5);
+        }
+    }
+
+    &__add-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background-color: $seller-accent;
+        color: #022c22;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid transparent;
+        outline: none;
+        box-shadow: 0 4px 12px rgba($seller-accent, 0.15);
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #34d399;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba($seller-accent, 0.25);
+        }
+
+        &:active {
+            transform: translateY(0) scale(0.97);
+        }
+    }
+
+    // 表格區域
+    &__table-container {
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    &__table-wrapper {
+        overflow-x: auto;
+    }
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    &__th {
+        padding: 1rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $seller-text-muted;
+        background-color: rgba(28, 25, 23, 0.5);
+        border-bottom: 1px solid $seller-border;
+    }
+
+    &__tr {
+        border-bottom: 1px solid $seller-border;
+        transition: background-color 0.2s;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background-color: rgba(41, 37, 36, 0.3);
+        }
+    }
+
+    &__td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+    }
+
+    // 商品資訊單元格
+    &__info-cell {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__thumb {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.5rem;
+        background-color: $seller-input-bg;
+        border: 1px solid rgba($seller-border, 0.5);
+        overflow: hidden;
+        flex-shrink: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__name {
+        font-weight: 500;
+        color: $seller-text-main;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    &__category {
+        font-size: 0.75rem;
+        color: $seller-text-muted;
+        margin-top: 0.25rem;
+    }
+
+    &__price {
+        font-weight: 500;
+        color: #d6ccc2;
+    }
+
+    &__stock {
+        font-weight: 500;
+
+        &--none {
+            color: #f87171;
+        }
+
+        &--normal {
+            color: #d6ccc2;
+        }
+    }
+
+    // 狀態標籤
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border: 1px solid transparent;
+        white-space: nowrap;
+
+        &--active {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: $seller-accent;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        &--inactive {
+            background-color: rgba(120, 113, 108, 0.1);
+            color: #a8a29e;
+            border-color: rgba(120, 113, 108, 0.2);
+        }
+
+        &--soldout {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+    }
+
+    // 操作按鈕
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        .seller-products__tr:hover & {
+            opacity: 1;
+        }
+    }
+
+    &__action-btn {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        color: $seller-text-muted;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: 1px solid transparent;
+        background: transparent;
+        outline: none;
+
+        &:active {
+            transform: scale(0.9);
+        }
+
+        &:hover {
+            &--view {
+                background-color: rgba($seller-accent, 0.1);
+                color: $seller-accent;
+                border-color: rgba($seller-accent, 0.2);
+            }
+
+            &--edit {
+                background-color: rgba(59, 130, 246, 0.1);
+                color: #60a5fa;
+                border-color: rgba(59, 130, 246, 0.2);
+            }
+
+            &--delete {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #f87171;
+                border-color: rgba(239, 68, 68, 0.2);
+            }
+        }
+    }
+
+    // 分頁
+    &__pagination {
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.875rem;
+        color: $seller-text-muted;
+        border-top: 1px solid $seller-border;
+    }
+
+    &__pager-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    &__pager-btn {
+        padding: 0.4rem 0.875rem;
+        border: 1px solid #44403c;
+        border-radius: 0.5rem;
+        background: transparent;
+        color: $seller-text-muted;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+
+        &:hover:not(:disabled) {
+            background-color: #292524;
+            color: $seller-text-main;
+            border-color: #57534e;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    }
+
+    // 🚀 優化後的空狀態樣式
+    &__empty-state {
+        padding: 5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+    }
+
+    &__empty-icon-box {
+        width: 5rem;
+        height: 5rem;
+        background-color: rgba($seller-border, 0.5);
+        border-radius: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $seller-text-muted;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba($seller-border, 0.8);
+    }
+
+    &__empty-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $seller-text-main;
+        margin-bottom: 0.5rem;
+    }
+
+    &__empty-text {
+        font-size: 0.9375rem;
+        color: $seller-text-muted;
+        max-width: 20rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    &__empty-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background-color: rgba($seller-accent, 0.1);
+        color: $seller-accent;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        border: 1px solid rgba($seller-accent, 0.2);
+        transition: all 0.2s;
+        text-decoration: none;
+
+        &:hover {
+            background-color: $seller-accent;
+            color: #022c22;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

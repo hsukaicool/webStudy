@@ -3,8 +3,6 @@ package com.app.mysecureapp.config;
 // ==========================================
 // 1. 我們自己專案的檔案
 // ==========================================
-// 用來跟資料庫溝通，根據帳號把使用者撈出來
-import com.app.mysecureapp.repository.UserRepository;
 
 // ==========================================
 // 2. Java EE / Jakarta 網頁底層規範
@@ -27,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 // 4. Spring Security 核心設定與網路安全 (Web Security)
 // ==========================================
 // HttpSecurity：最核心的設定工具！用來設定哪些 API 要攔截、CORS/CSRF 怎麼擋、Session 怎麼管。
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 // @EnableWebSecurity：加在類別上，代表正式啟用 Web 安全安檢大門。
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,27 +46,38 @@ import org.springframework.security.config.annotation.authentication.configurati
 // AuthenticationProvider & DaoAuthenticationProvider：實際去執行「比對密碼」與「驗證身分」的底層工人。
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-// UserDetailsService：Spring 規定的標準介面，專門用來「定義如何透過帳號載入使用者」。
-import org.springframework.security.core.userdetails.UserDetailsService;
-// UsernameNotFoundException：當資料庫找不到該帳號時，專門用來丟出的例外錯誤。
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 // PasswordEncoder & BCryptPasswordEncoder：密碼加密與解密的工具，確保我們是用 BCrypt 單向雜湊來處理密碼。
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.app.mysecureapp.service.CustomUserDetailsService; // 導入專換工具
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+// ==========================================
+
 @Configuration // 告訴 Spring 啟動時要先讀取這個設定檔
 @EnableWebSecurity // 啟用 Spring Security 的網頁安全機制 (開啟安檢大門)
+@EnableMethodSecurity // 🚀 關鍵：開啟「方法等級」的安全檢查功能
 public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter; // 我們自己寫的 JWT 警衛
 
     @Autowired
-    private UserRepository userRepository; // 用來去資料庫找使用者的工具
+    private CustomUserDetailsService customUserDetailsService; // 使用轉換工具
 
     // 【核心大腦】定義整個應用程式的 HTTP 安檢流程 (Filter Chain)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
+                // 啟用 CORS，它會去抓我們剛寫的 WebConfig 設定
+                .cors(org.springframework.security.config.Customizer.withDefaults())
+
                 // 1. 關閉 CSRF (跨站請求偽造) 防護
                 // 【原因】CSRF 攻擊主要是針對依賴 Cookie/Session 的網站。我們現在改用前後端分離，
                 // Token 是放在 HTTP Header 裡面傳遞，天然免疫 CSRF 攻擊，所以直接關閉以節省效能。
@@ -77,9 +87,28 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 針對登入 (/api/auth/login) 和註冊 (/api/auth/register) 的 API，允許所有人存取 (不須 Token)
                         .requestMatchers("/api/auth/**").permitAll()
+                        // 這裡必須放行 /api/public/ 開頭的所有路徑，這樣「沒登入的使用者」才能看到首頁商品。
+                        .requestMatchers("/api/public/**").permitAll()
+
+                        .requestMatchers("/hello").permitAll()
+                        
+                        // 🚀 放行 Spring 預設的錯誤轉發路徑，避免發生 403 Forbidden 掩蓋真實錯誤內容
+                        .requestMatchers("/error").permitAll()
+
+                        // 你之前的 ProductController 路徑是 /api/products/
+                        // 我們設定只有「已登入 (authenticated)」的人才能進
+                        // 如果你想更嚴格，可以改為 .hasRole("SELLER")
+                        .requestMatchers("/api/products/**").authenticated()
+
+                        // 🚀 【新增：賣家專用區】
+                        // 這裡我們明確指定 /api/seller/ 開頭的所有路徑都必須「通過驗證 (authenticated)」
+                        .requestMatchers("/api/seller/**").authenticated()
+
+                        // 🚀 訂單必須登入才能看
+                        .requestMatchers("/api/orders/**").authenticated()
+
                         // 除了上面提到的之外，"任何其他請求" 都必須經過身分驗證才能放行
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
 
                 // 3. 設定 Session 策略為「無狀態 (STATELESS)」
                 // 【原因】這是 JWT 架構的靈魂！我們告訴 Spring Security：「不要在伺服器記憶體裡建立 Session 記住使用者」。
@@ -102,14 +131,14 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        // 告訴它：去哪裡找使用者資料？(交給下面的 userDetailsService)
-        authProvider.setUserDetailsService(userDetailsService());
+        // 告訴它：去哪裡找使用者資料？(交給customUserDetailsService)
+        authProvider.setUserDetailsService(customUserDetailsService);
         // 告訴它：密碼是用什麼演算法加密的？(交給下面的 passwordEncoder)
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    // 【認證管理員】負責處理登入時的認證請求 (我們稍後在 AuthController 會用到它來觸發登入驗證)
+    // 【認證管理員】負責處理登入時的認證請求 (我們稍後在 LoginController 會用到它來觸發登入驗證)
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -122,13 +151,28 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 【使用者資料服務】定義如何從資料庫撈取使用者細節
-    // 當使用者登入，或是解析 JWT 需要核對身分時，Spring Security 會呼叫這個方法。
+    // 【CORS 配置中心】定義哪些外來網站可以存取我們的 API
+    // 🚀 技術亮點：精確控制跨網域存取權限，防止非法網域調用 API。
     @Bean
-    public UserDetailsService userDetailsService() {
-        // 使用 Lambda 表達式實作：傳入 username，用 UserRepository 去資料庫撈資料
-        return username -> (org.springframework.security.core.userdetails.UserDetails) userRepository.findByUsername(username)
-                // 如果找不到，就丟出例外錯誤
-                .orElseThrow(() -> new UsernameNotFoundException("找不到使用者: " + username));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 1. 允許的來源：這裡填入你 React 前端的網址
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173"));
+
+        // 2. 允許的 HTTP 方法：一定要包含 PATCH，因為頭像更新是用 PATCH
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+        // 3. 允許的標頭：允許前端傳送 Authorization (JWT) 和 Content-Type
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+
+        // 4. 允許攜帶憑證 (如 Cookie 或認證資訊)
+        configuration.setAllowCredentials(true);
+
+        // 5. 將此設定應用到所有的 API 路徑 (/**)
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
+
 }

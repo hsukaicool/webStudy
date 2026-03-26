@@ -1,12 +1,10 @@
 import React from 'react';
 import { ShieldCheck, Leaf, Gem, Users } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+
 
 export default function About() {
     return (
         <div className="about-page">
-            <Navbar />
 
             <main className="about-main">
                 {/* Hero Section */}
@@ -109,8 +107,6 @@ export default function About() {
                     </div>
                 </section>
             </main>
-
-            <Footer />
         </div>
     );
 }

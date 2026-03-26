@@ -10,6 +10,7 @@
 @use 'layoutScss/navbar';
 @use 'layoutScss/footer';
 @use 'layoutScss/grid';
+@use 'layoutScss/sellerLayout';
 
 // 4. 載入元件 (Components) -> 修改資料夾名稱
 @use 'componentsScss/button';
@@ -22,6 +23,14 @@
 @use 'pagesScss/about';
 @use 'pagesScss/profile';
 @use 'pagesScss/productDetail';
+@use 'pagesScss/buyerOrders';
+@use 'pagesScss/cart';
+@use 'pagesScss/storeSettings';
+@use 'pagesScss/sellerProducts';
+@use 'pagesScss/sellerOrders';
+@use 'pagesScss/addProduct';
+@use 'pagesScss/store';
+@use 'pagesScss/checkout';
 
 // 6. 載入 RWD 混入 (Mixins)
 @use 'mixins/respond-to';

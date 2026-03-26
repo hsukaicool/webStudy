@@ -5,12 +5,13 @@ import '../scss/pagesScss/Login.scss'; // 記得引入你的 SCSS 檔案
 
 import { useNavigate } from 'react-router-dom'; // 引入跳轉鉤子
 import { userApi } from '../api/services/userApi'; // 引入 API
-
+import { useAuth } from '../api/context/AuthContext';
 
 
 export default function Login() {
 
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
@@ -24,8 +25,11 @@ export default function Login() {
             // 呼叫後端 API
             const response = await userApi.login(credentials);
 
-            // 根據後端回傳：response 內包含 { token, username }
-            localStorage.setItem('access_token', response.token);
+            // 1. 先在組件最上方解構出 login 方法 (您剛才應該已經 import useAuth 了)
+
+            // 2. 將原本的 localStorage 代碼替換為：
+            login(response.token); // 這行會幫您存 token 並同時通知 Navbar 切換狀態
+            // 如果您還需要存使用者名稱，可以暫時保留這行或後續整合進 Context
             localStorage.setItem('username', response.username);
 
             alert('登入成功！');

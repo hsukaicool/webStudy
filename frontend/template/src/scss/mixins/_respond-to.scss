@@ -1,4 +1,5 @@
 // 用來存放「會重複使用的 SCSS 函數」。最常見的就是 RWD 響應式斷點設定
+@use "sass:map";
 
 // 定義 RWD 斷點
 $breakpoints: (
@@ -12,10 +13,13 @@ $breakpoints: (
 );
 
 // RWD 響應式 Mixin
-// 使用方式：@include respond-to('md') { ... }
 @mixin respond-to($breakpoint) {
-    @if map-has-key($breakpoints, $breakpoint) {
-        @media (min-width: map-get($breakpoints, $breakpoint)) {
+
+    // 2. 將 map-has-key 修改為 map.has-key
+    @if map.has-key($breakpoints, $breakpoint) {
+
+        // 3. 將 map-get 修改為 map.get
+        @media (min-width: map.get($breakpoints, $breakpoint)) {
             @content;
         }
     }

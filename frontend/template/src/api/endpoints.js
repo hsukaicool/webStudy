@@ -6,10 +6,6 @@ export const ENDPOINTS = {
         LOGIN: '/api/auth/login',
         REGISTER: '/api/auth/register',
     },
-    USER: {
-        PROFILE: '/users/me',
-        UPDATE: '/users/update',
-    },
     PRODUCTS: {
         LIST: '/products',
         DETAIL: (id) => `/products/${id}`, // 帶有變數的路徑可以寫成函數
@@ -17,6 +13,15 @@ export const ENDPOINTS = {
     HELLO_TEST: '/hello',  // 👈 新增這行 (因為你的 baseURL 已經包含 /my-project/api 了)
 
     IMGUPLOAD: '/img/upload',
+
+    USER: {
+        PROFILE: '/api/profile', // 修正路徑以符合後端 Controller
+        UPDATE: '/api/profile',
+        AVATAR: '/api/profile/avatar', // 圖片上傳的地方
+    },
+    IMAGES: {
+        UPLOAD: '/api/images/upload',
+    }
 };
 
 

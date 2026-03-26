@@ -4,34 +4,109 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { homePageApi } from '../api/services/homePage';
+import productApi from '../api/services/productApi';
+import bannerApi from '../api/services/bannerApi';
+import { useAuth } from '../api/context/AuthContext';
+import Cropper from 'react-easy-crop';
+import { getCroppedImg } from '../api/utils/canvasUtils';
+import { BASE_URL } from '../api/axiosClient';
+
 
 // 確保有引入你的 scss
 // import '../scss/pagesScss/_home.scss'; 
 
 export default function Home() {
-    // 1. 輪播圖當前索引狀態
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    // 2. [重點新增]：宣告 Banner 的專屬狀態 (資料、載入中、錯誤)
-    const [bannerImages, setBannerImages] = useState([]); // 預設空陣列
-    const [isBannerLoading, setIsBannerLoading] = useState(true);
-    const [bannerError, setBannerError] = useState(null);
+    const [imageToCrop, setImageToCrop] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+
+    const { userProfile } = useAuth(); // 🚀 從 AuthContext 拿取身分資料
+    const isAdmin = userProfile?.role === 'ROLE_ADMIN'; // 🚀 正確的角色判定方式
+    // 假設後端 username 對應到此處，或直接檢查 profile
+    // 狀態管理
+    const [banners, setBanners] = useState([]);
+    const [isHeroLoading, setIsHeroLoading] = useState(true);
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const data = await bannerApi.getPublicBanners();
+                setBanners(data);
+            } catch (error) {
+                console.error("載入 Banner 失敗:", error);
+            } finally {
+                setIsHeroLoading(false);
+            }
+        };
+        fetchBanners();
+    }, []);
+    // 處理上傳 (觸發隱藏的 input)
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.addEventListener('load', () => setImageToCrop(reader.result));
+        reader.readAsDataURL(file);
+    };
+
+    const onCropComplete = (croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    };
+
+    const handleCropConfirm = async () => {
+        try {
+            setIsUploading(true);
+            const croppedImageBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+            const croppedFile = new File([croppedImageBlob], 'banner.jpg', { type: 'image/jpeg' });
+
+            await bannerApi.uploadBanner(croppedFile, "首頁 Banner", "/");
+            alert("🎉 Banner 上傳成功！");
+            setImageToCrop(null);
+            window.location.reload();
+        } catch (error) {
+            console.error("上傳失敗", error);
+            alert("上傳失敗，請重試");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+
 
 
     // [重點 2]：使用 useEffect 控制計時器自動輪播
     useEffect(() => {
         const timer = setInterval(() => {
-            // 使用 callback 格式確保拿到最新的 prev 狀態，並且用 % 取餘數讓陣列可以循環
-            setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-        }, 5000); // 5 秒切換一次
+            const length = banners.length > 0 ? banners.length : HERO_IMAGES.length;
+            setCurrentImageIndex((prev) => (prev + 1) % length);
+        }, 5000);
 
-        // [關鍵安全機制]：元件卸載時清除計時器，避免發生 Memory Leak (記憶體洩漏)
         return () => clearInterval(timer);
+    }, [banners]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setIsLoading(true);
+                // 呼叫 API，後端回傳的是 Page 物件
+                const response = await productApi.getPublicProducts(0, 8); // 首頁顯示前 8 筆
+                setProducts(response.content); // Page 物件的數據在 content 屬性中
+            } catch (error) {
+                console.error("載入商品失敗:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchProducts();
     }, []);
 
-    // ... 原本的 fetchHomeData 等邏輯保留 ...
-
-
-    // 原本的 API 串接邏輯
 
     const [data, setData] = useState(null);
 
@@ -50,6 +125,10 @@ export default function Home() {
 
     // 確保已引入
 
+    const DEFAULT_BANNERS = [
+        "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?q=80&w=1200&auto=format&fit=crop",
+        // ... 其他預設圖
+    ];
 
     // 在 Home 元件外部定義圖片來源
     const HERO_IMAGES = [
@@ -69,31 +148,58 @@ export default function Home() {
         { icon: MoreHorizontal, label: "更多" },
     ];
 
+
     return (
         <div className="page-home overflow-x-hidden">
             <main className="home-main">
                 {/* Hero 區塊 */}
                 <section className="hero-section">
+                    {isAdmin && (
+                        <div className="admin-controls">
+                            <input
+                                type="file"
+                                id="banner-upload"
+                                hidden
+                                onChange={handleFileChange}
+                                accept="image/*"
+                            />
+                            <button
+                                className="edit-banner-btn"
+                                onClick={() => document.getElementById('banner-upload').click()}
+                            >
+                                ✏️ 修改 Banner (Admin Only)
+                            </button>
+                        </div>
+                    )}
                     <div className="hero-content-wrapper">
                         <div className="hero-image-wrapper">
-                            {/* 輪播圖片群 */}
-                            {HERO_IMAGES.map((img, index) => (
-                                <div
-                                    key={img}
-                                    // 利用 Template Literals (樣板字面值) 動態判斷是否要加上 'active'
-                                    className={`hero-image ${index === currentImageIndex ? 'active' : ''}`}
-                                    // 背景圖片還是得留在 inline style，因為它是動態資料
-                                    style={{ backgroundImage: `url('${img}')` }}
-                                />
-                            ))}
+                            {/* 🚀 從 API 拿到的 banners 資料 */}
+                            {banners.length > 0 ? (
+                                banners.map((banner, index) => (
+                                    <div
+                                        key={banner.id}
+                                        className={`hero-image ${index === currentImageIndex ? 'active' : ''}`}
+                                        style={{
+                                            backgroundImage: `url('${banner.imageUrl.startsWith('http') ? banner.imageUrl : `${BASE_URL}${banner.imageUrl}`}')`
+                                        }}
+                                    />
+                                ))
+                            ) : (
+                                // 🚀 如果 API 還沒回傳，先顯示預設圖
+                                DEFAULT_BANNERS.map((img, index) => (
+                                    <div
+                                        key={index}
+                                        className={`hero-image ${index === currentImageIndex ? 'active' : ''}`}
+                                        style={{ backgroundImage: `url('${img}')` }}
+                                    />
+                                ))
+                            )}
 
-                            {/* 輪播指示器（小圓點按鈕） */}
                             <div className="carousel-indicators">
-                                {HERO_IMAGES.map((_, index) => (
+                                {(banners.length > 0 ? banners : HERO_IMAGES).map((_, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setCurrentImageIndex(index)}
-                                        // 同樣動態判斷是否要加上 'active'
                                         className={`indicator-btn ${index === currentImageIndex ? 'active' : ''}`}
                                         aria-label={`切換至第 ${index + 1} 張圖片`}
                                     />
@@ -101,9 +207,49 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+
+                    {/* 🚀 彈出的裁切視窗 (Crop Modal) */}
+                    {imageToCrop && (
+                        <div className="crop-modal">
+                            <div className="crop-modal__content">
+                                <div className="crop-modal__container">
+                                    <Cropper
+                                        image={imageToCrop}
+                                        crop={crop}
+                                        zoom={zoom}
+                                        aspect={21 / 9} // Banner 通常用寬螢幕比例
+                                        onCropChange={setCrop}
+                                        onCropComplete={onCropComplete}
+                                        onZoomChange={setZoom}
+                                    />
+                                </div>
+                                <div className="crop-modal__controls">
+                                    <input
+                                        type="range"
+                                        value={zoom}
+                                        min={1}
+                                        max={3}
+                                        step={0.1}
+                                        onChange={(e) => setZoom(e.target.value)}
+                                        className="crop-modal__slider"
+                                    />
+                                    <div className="crop-modal__actions">
+                                        <button className="btn-cancel" onClick={() => setImageToCrop(null)}>取消</button>
+                                        <button
+                                            className="btn-save"
+                                            onClick={handleCropConfirm}
+                                            disabled={isUploading}
+                                        >
+                                            {isUploading ? '處理中...' : '確認裁切並上傳'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </section>
 
-                {/* 精選分類區塊 */}
+                {/* 精選分類區塊 
                 <section className="categories-section">
                     <h2 className="section-title">精選分類</h2>
                     <div className="categories-grid">
@@ -116,7 +262,7 @@ export default function Home() {
                             </button>
                         ))}
                     </div>
-                </section>
+                </section>*/}
 
                 {/* 最新上架區塊 */}
                 <section className="recent-listings-section">
@@ -129,24 +275,32 @@ export default function Home() {
                     </div>
 
                     <div className="listings-grid">
-                        {/* 商品卡片 1 */}
-                        <Link to="/marketplace" className="listing-card group">
-                            <div className="image-wrapper">
-                                <div
-                                    className="listing-image"
-                                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=600&auto=format&fit=crop')" }}
-                                />
-                                <button className="like-btn"><Heart className="icon" /></button>
-                                <span className="badge">已驗證賣家</span>
-                            </div>
-                            <div className="listing-info">
-                                <h3>iPad Pro 12.9"</h3>
-                                <span className="price">$850</span>
-                            </div>
-                            <p className="location">紐約威廉斯堡 • 距離 2 英里</p>
-                        </Link>
-
-                        {/* 商品卡片 2-4 省略重複，你可以把剩餘的寫法依樣畫葫蘆 */}
+                        {isLoading ? (
+                            <p>商品載入中...</p>
+                        ) : products.length > 0 ? (
+                            products.map((product) => (
+                                <Link
+                                    to={`/product/${product.externalId}`}
+                                    key={product.externalId}
+                                    className="listing-card group"
+                                >
+                                    <div className="image-wrapper">
+                                        <div
+                                            className="listing-image"
+                                            style={{ backgroundImage: `url('${product.imageUrl || '預設圖URL'}')` }}
+                                        />
+                                        <button className="like-btn"><Heart className="icon" /></button>
+                                        <span className="badge">{product.condition}</span>
+                                    </div>
+                                    <div className="listing-info">
+                                        <h3>{product.name}</h3>
+                                        <span className="price">${product.price}</span>
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <p>目前沒有商品</p>
+                        )}
                     </div>
                 </section>
 

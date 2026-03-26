@@ -14,73 +14,82 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * JWT 工具類別 (支援不透明令牌 Opaque Token 架構)
+ * 負責 JWT 的生成、解析與驗證。
+ */
 @Component
 public class JwtUtil {
 
-    // 從 application.properties 中讀取密鑰
     @Value("${jwt.secret}")
     private String secret;
 
-    // 從 application.properties 中讀取過期時間
     @Value("${jwt.expiration}")
     private long expiration;
 
-    // 產生 SecretKey 物件 (jjwt 0.12.x 需要)
     private SecretKey getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // 從 Token 中取出使用者名稱
+    /**
+     * 🚀 雙 ID 架構核心：
+     * 從 Token 的 Subject 中取出對外識別碼 (External ID / UUID)。
+     * 重要：雖然配合 Spring Security 介面名稱保留為 extractUsername，但實質內容已替換為 UUID。
+     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // 從 Token 中取出過期時間
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // 泛型方法：用來取出 Token 中的任何資訊 (Claim)
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // 解析 Token (jjwt 0.12.x 写法)
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getSigningKey()) // 設定驗證簽名的 Key
+                .verifyWith(getSigningKey())
                 .build()
-                .parseSignedClaims(token) // 解析 Token
-                .getPayload(); // 取得 Payload (Claims)
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    // 檢查 Token 是否過期
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // 產生 Token (給 UserDetails 用)
+    /**
+     * 產生 Token (發放護照)
+     * @param userDetails 經過 CustomUserDetailsService 處理過的使用者資訊，此時的 Username 已被替換為 UUID
+     */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        // 🚀 這裡的 userDetails.getUsername() 實際上會提取出 UUID 字串
         return createToken(claims, userDetails.getUsername());
     }
 
-    // 產生 Token (jjwt 0.12.x 写法)
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .claims(claims) // 設定自定義聲明
-                .subject(subject) // 設定使用者名稱
-                .issuedAt(new Date(System.currentTimeMillis())) // 發行時間
-                .expiration(new Date(System.currentTimeMillis() + expiration)) // 過期時間
-                .signWith(getSigningKey()) // 簽名
+                .claims(claims)
+                .subject(subject) // 這裡放入的將是 UUID
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    // 驗證 Token 是否有效
+    /**
+     * 驗證 Token 是否有效
+     * 比對 Token 中的 UUID 與資料庫查詢到的 UUID 是否一致
+     */
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        // 從 token 取出 UUID 字串
+        final String tokenUuid = extractUsername(token);
+        // 比對兩者的 UUID 是否相同，並確認是否過期
+        return (tokenUuid.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

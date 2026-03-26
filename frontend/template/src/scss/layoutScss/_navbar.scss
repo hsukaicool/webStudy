@@ -2,202 +2,286 @@
 @use "../variables/color" as *;
 @use "../variables/typography" as *;
 
-// 確保手機版如果空間不足可以隱藏或簡化
-@media (max-width: 768px) {
-    .become-seller-btn span {
-        display: none; // 手機版只留圖標或直接隱藏
-    }
-}
-
 .navbar {
     width: 100%;
     position: sticky;
     top: 0;
     z-index: 100;
     transition: all 0.3s ease;
-    border-bottom: 1px solid transparent;
 
-    &.navbar-home {
+    // 預設樣式
+    &--default {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid $border-light;
+    }
+
+    // 首頁特殊樣式 (如：更透明)
+    &--home {
         background-color: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    &.navbar-default {
-        background-color: white;
-        border-bottom-color: $border-light;
+    // 主要內部佈局容器
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    padding: 0 1.5rem;
+    max-width: 100%;
+
+    @media (min-width: 768px) {
+        padding: 0 5rem;
     }
 
-    .navbar-container {
-        max-width: 1440px;
-        margin: 0 auto;
-        height: 80px;
+    // --- Element: Brand (Logo 與成為賣家) ---
+    &__brand {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0 1.5rem;
+    }
 
-        @media (min-width: 768px) {
-            padding: 0 5rem; // 對齊 Home 的 px-20
+    &__brand-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: $text-main;
+        text-decoration: none;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 0.7;
         }
     }
 
-    .navbar-left {
+    &__logo-icon {
+        color: $warning-color;
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.15em;
+        margin: 0;
+    }
+
+    // --- Element: Content (搜尋框與動作區) ---
+    &__content {
         display: flex;
+        flex: 1;
+        justify-content: flex-end;
         align-items: center;
         gap: 1.5rem;
+    }
 
-        .navbar-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: $text-main;
-            text-decoration: none;
-            transition: opacity 0.2s;
+    // --- Element: Search (搜尋) ---
+    &__search {
+        flex-direction: column;
+        min-width: 10rem;
+        max-width: 16rem;
+        height: 2.5rem;
+    }
 
-            .logo-icon {
-                color: $warning-color;
-            }
+    &__search-wrapper {
+        display: flex;
+        width: 100%;
+        flex: 1;
+        align-items: stretch;
+        border-radius: 999px;
+        height: 100%;
+        background-color: $bg-neutral-warm;
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
 
-            .logo-text {
-                font-size: 1.25rem;
-                font-weight: 700;
-                line-height: 1;
-                // font-display class will handle the font-family and letter-spacing
-            }
-
-            &:hover {
-                opacity: 0.7;
-            }
-
-            .become-seller-btn {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                padding: 8px 16px;
-                background-color: var(--primary-light, #f0f7ff); // 淡淡的底色
-                color: var(--primary, #0066cc);
-                border-radius: 999px;
-                font-size: 14px;
-                font-weight: 600;
-                margin-left: 1.5rem;
-                transition: all 0.2s ease;
-
-                &:hover {
-                    background-color: var(--primary, #0066cc);
-                    color: white;
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
-                }
-            }
-
-        }
-
-        .mobile-menu-btn {
-            background: none;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-
-            @media (min-width: 1024px) {
-                display: none;
-            }
+        &:focus-within {
+            background-color: white;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.05);
         }
     }
 
+    &__search-icon-box {
+        color: $text-muted;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1rem;
+    }
 
-    .navbar-actions {
+    &__search-input {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: $text-main;
+        font-size: 0.875rem;
+        padding: 0 0.75rem;
+        outline: none;
+
+        &::placeholder {
+            color: $text-muted;
+        }
+    }
+
+    // --- Element: Actions (右側按鈕群組) ---
+    &__actions {
         display: flex;
         align-items: center;
         gap: 0.5rem;
 
         @media (min-width: 768px) {
-            gap: 1.5rem;
+            gap: 1rem;
         }
+    }
 
-        .search-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
+    // --- Element: Button (基礎按鈕) ---
+    &__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        padding: 0 1rem;
+        gap: 0.5rem;
 
-            &.desktop-only {
-                display: none;
-
-                @media (min-width: 1024px) {
-                    display: flex;
-                }
-            }
-
-            .search-icon {
-                position: absolute;
-                left: 1rem;
-                color: $text-muted;
-                pointer-events: none;
-            }
-
-            .search-input {
-                background-color: $bg-neutral-warm;
-                border: 1px solid transparent;
-                padding: 0.6rem 1rem 0.6rem 2.75rem;
-                border-radius: 999px;
-                width: 200px;
-                font-size: 0.875rem;
-                transition: all 0.3s ease;
-
-                &:focus {
-                    outline: none;
-                    background-color: white;
-                    border-color: $primary-color;
-                    width: 240px;
-                }
-            }
-        }
-
-        .action-btn {
+        // Modifier: Icon Only
+        &--icon {
+            width: 2.5rem;
+            padding: 0;
             background: none;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
             color: $text-main;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: transform 0.2s, color 0.2s;
 
             &:hover {
                 color: $primary-color;
                 transform: translateY(-2px);
             }
+        }
 
-            &.mobile-only {
-                @media (min-width: 1024px) {
-                    display: none;
-                }
+        /* 讓 Icon 按鈕變高級的 SCSS 寫法 */
+        &__btn--icon {
+            width: 2.5rem;
+            /* w-10 (40px) */
+            height: 2.5rem;
+            /* h-10 (40px) */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            background-color: rgba($bg-neutral-warm, 0.3);
+            /* 淡背景色 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: rgba($bg-neutral-warm, 0.5);
+                /* 懸停變深 */
+                transform: translateY(-2px);
+                /* 輕微上浮感 */
             }
+        }
 
-            &.cart-btn {
-                position: relative;
 
-                .cart-badge {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background-color: $primary-color;
-                    color: white;
-                    font-size: 0.65rem;
-                    width: 18px;
-                    height: 18px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: bold;
-                }
+        // Modifier: Primary (註冊/登入)
+        &--primary {
+            background-color: $primary-color;
+            color: white;
+
+            &:hover {
+                opacity: 0.9;
+                transform: translateY(-1px);
             }
+        }
+
+        // Modifier: Secondary (成為賣家 - 調整為右側樣式)
+        &--secondary {
+            background-color: rgba($bg-neutral-warm, 0.8);
+            color: $text-main;
+            border-radius: 999px;
+            margin-right: 0.5rem; // 增加一點與圖標的間隔
+
+            &:hover {
+                background-color: $bg-neutral-warm;
+                transform: translateY(-1px);
+            }
+        }
+
+        // Modifier: Danger (登出)
+        &--danger {
+            color: $danger-color;
+
+            &:hover {
+                background-color: rgba($danger-color, 0.05);
+            }
+        }
+
+        // Modifier: Relative (用於 Badge 定位)
+        &--relative {
+            position: relative;
+        }
+    }
+
+    // --- Element: Icon ---
+    &__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+
+        &--sm {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    // --- Element: Badge (購物車數字) ---
+    &__badge {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: $danger-color;
+        color: white;
+        font-size: 0.65rem;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        border: 2px solid white;
+    }
+
+    // --- 響應式工具類別 ---
+    &__desktop-only {
+        display: none;
+
+        @media (min-width: 1024px) {
+            display: flex;
+        }
+    }
+
+    &__desktop-flex {
+        display: none;
+
+        @media (min-width: 1024px) {
+            display: flex;
+        }
+    }
+
+    &__mobile-only {
+        display: flex;
+
+        @media (min-width: 1024px) {
+            display: none;
         }
     }
 }

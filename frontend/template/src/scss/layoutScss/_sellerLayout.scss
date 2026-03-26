@@ -1,0 +1,191 @@
+// src/scss/layoutScss/_sellerLayout.scss
+@use '../variables/color' as *;
+@use '../mixins/respond-to' as *;
+
+// 賣家中心的專屬深色主題色 (Stone & Emerald)
+$seller-bg: #0c0a09;        // Stone 950
+$seller-card-bg: #1c1917;   // Stone 900
+$seller-border: #292524;    // Stone 800
+$seller-text-main: #fafaf9; // Stone 50
+$seller-text-muted: #a8a29e; // Stone 400
+$seller-accent: #10b981;    // Emerald 500
+$seller-accent-light: rgba(16, 185, 129, 0.1);
+
+.seller-layout {
+    min-height: 100vh;
+    background-color: $seller-bg;
+    color: $seller-text-main;
+    display: flex;
+    font-family: inherit;
+
+    &__sidebar {
+        width: 16rem;
+        background-color: $seller-card-bg;
+        border-right: 1px solid $seller-border;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        z-index: 50;
+    }
+
+    &__main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    &__header {
+        height: 5rem;
+        border-bottom: 1px solid $seller-border;
+        background-color: rgba(28, 25, 23, 0.8);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        padding: 0 2rem;
+        flex-shrink: 0;
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $seller-text-main;
+    }
+
+    &__content-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        background-color: $seller-bg;
+
+        // 客製化滾動條
+        &::-webkit-scrollbar { width: 6px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb {
+            background: $seller-border;
+            border-radius: 10px;
+        }
+    }
+}
+
+// 賣家資訊區
+.seller-profile {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    border-bottom: 1px solid $seller-border;
+
+    &__avatar-wrapper {
+        position: relative;
+        width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+        padding: 2px;
+        background: linear-gradient(135deg, $seller-accent, transparent);
+    }
+
+    &__avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid $seller-card-bg;
+    }
+
+    &__status-dot {
+        position: absolute;
+        bottom: 0.25rem;
+        right: 0.25rem;
+        width: 1rem;
+        height: 1rem;
+        background-color: $seller-accent;
+        border: 2px solid $seller-card-bg;
+        border-radius: 50%;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: $seller-text-main;
+    }
+
+    &__badge {
+        font-size: 0.75rem;
+        color: $seller-accent;
+        background-color: $seller-accent-light;
+        padding: 0.125rem 0.5rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        width: fit-content;
+        margin: 0 auto;
+    }
+}
+
+// 導覽選單
+.seller-nav {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        color: $seller-text-muted;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+
+        &:hover {
+            color: $seller-text-main;
+            background-color: $seller-border;
+        }
+
+        &--active {
+            color: $seller-accent;
+            background-color: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.2);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    &__footer {
+        padding: 1rem;
+        border-top: 1px solid $seller-border;
+    }
+
+    &__exit {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: $seller-text-muted;
+        text-decoration: none;
+        border-radius: 0.75rem;
+        transition: all 0.2s;
+
+        &:hover {
+            color: $seller-text-main;
+            background-color: $seller-border;
+        }
+    }
+}

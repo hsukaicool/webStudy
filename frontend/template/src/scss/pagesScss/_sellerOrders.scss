@@ -1,0 +1,323 @@
+// src/scss/pagesScss/_sellerOrders.scss
+@use '../variables/color' as *;
+@use '../mixins/respond-to' as *;
+
+// 賣家中心專屬深色調
+$seller-card-bg: #1c1917;   // Stone 900
+$seller-input-bg: #0c0a09;  // Stone 950
+$seller-border: #292524;    // Stone 800
+$seller-text-main: #fafaf9; // Stone 50
+$seller-text-muted: #a8a29e; // Stone 400
+$seller-accent: #10b981;    // Emerald 500
+
+.seller-orders {
+    max-width: 60rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    // 搜尋區
+    &__header {
+        width: 100%;
+    }
+
+    &__search-container {
+        position: relative;
+        max-width: 30rem;
+    }
+
+    &__search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $seller-text-muted;
+    }
+
+    &__search-input {
+        width: 100%;
+        padding: 0.625rem 1rem 0.625rem 2.5rem;
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 0.75rem;
+        color: $seller-text-main;
+        transition: all 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: rgba($seller-accent, 0.5);
+            box-shadow: 0 0 0 1px rgba($seller-accent, 0.5);
+        }
+    }
+
+    // 分頁標籤
+    &__tabs {
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 2px solid $seller-border;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
+    }
+
+    &__tab {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $seller-text-muted;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+
+        &:hover { color: #fafaf9; }
+
+        &--active {
+            color: $seller-accent;
+            border-bottom-color: $seller-accent;
+        }
+    }
+
+    // 訂單列表
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__item {
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    // 訂單卡片頭部
+    &__item-header {
+        padding: 1rem 1.5rem;
+        background-color: rgba(28, 25, 23, 0.5);
+        border-bottom: 1px solid $seller-border;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__buyer {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__buyer-avatar {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid $seller-border;
+    }
+
+    &__buyer-name {
+        font-weight: 500;
+        color: $seller-text-main;
+    }
+
+    &__item-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.8125rem;
+        color: $seller-text-muted;
+
+        .divider { color: #44403c; }
+    }
+
+    // 訂單內容
+    &__item-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        @include respond-to('md') {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &__product-info {
+        display: flex;
+        gap: 1.25rem;
+        flex: 1;
+    }
+
+    &__product-thumb {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 0.75rem;
+        background-color: $seller-input-bg;
+        border: 1px solid rgba($seller-border, 0.5);
+        overflow: hidden;
+        flex-shrink: 0;
+
+        img { width: 100%; height: 100%; object-fit: cover; }
+    }
+
+    &__product-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        justify-content: center;
+    }
+
+    &__product-name {
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: $seller-text-main;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    &__product-price {
+        color: $seller-text-muted;
+        font-size: 0.875rem;
+    }
+
+    &__total-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 1rem;
+        border-top: 1px solid $seller-border;
+        width: 100%;
+
+        @include respond-to('md') {
+            align-items: flex-end;
+            border-top: none;
+            padding-top: 0;
+            width: auto;
+            min-width: 10rem;
+        }
+    }
+
+    &__total-label {
+        font-size: 0.8125rem;
+        color: $seller-text-muted;
+    }
+
+    &__total-amount {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $seller-accent;
+    }
+
+    // 操作按鈕區
+    &__item-footer {
+        padding: 1rem 1.5rem;
+        background-color: rgba(28, 25, 23, 0.3);
+        border-top: 1px solid $seller-border;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: 1px solid transparent; // 統一預設邊框透明
+        outline: none; // 移除瀏覽器預設框線
+
+        &:active {
+            transform: scale(0.97); // 點擊時微縮小
+        }
+
+        &--secondary {
+            background-color: #292524; // Stone 800
+            color: $seller-text-main;
+            border-color: #44403c;
+            &:hover { 
+                background-color: #44403c; 
+                border-color: #57534e;
+            }
+        }
+
+        &--outline-danger {
+            background: transparent;
+            border-color: rgba(239, 68, 68, 0.3); // 讓邊框更顯眼
+            color: #fca5a5; // 紅色稍微柔和
+            &:hover { 
+                border-color: #f87171; 
+                color: #ffffff; 
+                background-color: rgba(239, 68, 68, 0.2); 
+            }
+        }
+
+        &--primary {
+            background-color: $seller-accent;
+            color: #022c22; // 深綠色文字在淺綠按鈕上更對比
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            box-shadow: 0 4px 12px rgba($seller-accent, 0.15); // 加入柔和綠色陰影
+            
+            &:hover { 
+                background-color: #34d399; 
+                box-shadow: 0 6px 20px rgba($seller-accent, 0.25);
+                transform: translateY(-2px); // 懸停微上升
+            }
+
+            &:active {
+                transform: translateY(0) scale(0.97);
+            }
+        }
+
+        @include respond-to('sm') {
+            flex: initial;
+        }
+    }
+
+    // 狀態標籤
+    &__status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border: 1px solid transparent;
+
+        &--pending { background-color: rgba(245, 158, 11, 0.1); color: #fbbf24; border-color: rgba(245, 158, 11, 0.2); }
+        &--shipping { background-color: rgba(59, 130, 246, 0.1); color: #60a5fa; border-color: rgba(59, 130, 246, 0.2); }
+        &--completed { background-color: rgba(16, 185, 129, 0.1); color: $seller-accent; border-color: rgba(16, 185, 129, 0.2); }
+        &--cancelled { background-color: rgba(120, 113, 108, 0.1); color: #a8a29e; border-color: rgba(120, 113, 108, 0.2); }
+    }
+
+    // 空狀態
+    &__empty {
+        padding: 5rem 0;
+        text-align: center;
+        color: #78716c;
+
+        &-icon { width: 3rem; height: 3rem; margin: 0 auto 1rem; opacity: 0.2; }
+    }
+}

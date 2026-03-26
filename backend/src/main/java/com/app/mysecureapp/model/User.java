@@ -2,6 +2,12 @@ package com.app.mysecureapp.model;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore; // 讓程式認識 @JsonIgnore
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
+
 import java.util.UUID; // 讓程式認識 UUID
 
 /**
@@ -9,6 +15,11 @@ import java.util.UUID; // 讓程式認識 UUID
  * 對應資料庫中的 "users" 資料表
  */
 @Entity
+
+@Getter // 自動為所有欄位產生 Getter
+@Setter // 自動為所有欄位產生 Setter
+@NoArgsConstructor // 自動產生無參數建構子 (JPA 必備)
+@AllArgsConstructor // 自動產生全參數建構子
 @Table(name = "users")
 public class User {
 
@@ -43,60 +54,16 @@ public class User {
     // 這裡簡化處理，直接存字串。複雜系統可能會用 @ManyToMany 關聯 Roles 表
     private String role = "ROLE_USER";
 
-    // 建構子
-    public User() {}
 
+    // 一對一關聯通常設為 LAZY 提高效能
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserProfile userProfile;
+
+
+    // 💡 提示：手寫的特定建構子可以保留，不會跟 Lombok 衝突
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-    }
-
-    // --- Getters and Setters ---
-
-    public Long getId() {
-        return id;
-    }
-
-    public UUID getExternalId() {return externalId;}
-    // id 由資料庫產生，通常不需要 setId
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getDisplayName() {
-        return displayName; }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 }

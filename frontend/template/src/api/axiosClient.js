@@ -2,13 +2,14 @@
 // 【建議做法】 api/axiosClient.js
 import axios from 'axios';
 
+
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080';
+
 // 1. 建立獨立的 axios 實例
 const axiosClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080', // 從環境變數抓網址
+    baseURL: BASE_URL, // 從環境變數抓網址
     timeout: 10000, // 設定超時時間，避免 API 卡死
-    headers: {
-        'Content-Type': 'application/json',
-    },
+
 });
 
 // 2. 請求攔截器 (Request Interceptor) - 在送出 request 前攔截

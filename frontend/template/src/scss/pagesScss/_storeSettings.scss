@@ -1,0 +1,489 @@
+// src/scss/pagesScss/_storeSettings.scss
+@use '../variables/color' as *;
+@use '../mixins/respond-to' as *;
+
+// 承襲賣家中心深色色調
+$seller-card-bg: #1c1917; // Stone 900
+$seller-input-bg: #0c0a09; // Stone 950
+$seller-border: #292524; // Stone 800
+$seller-text-muted: #a8a29e; // Stone 400
+$seller-accent: #10b981; // Emerald 500
+
+.store-settings {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    // 封面區域
+    &__cover {
+        position: relative;
+        height: 16rem;
+        border-radius: 1.5rem;
+        background-color: #292524; // Stone 800
+        border: 1px solid $seller-border;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+        &-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s, transform 0.5s;
+        }
+
+        &--editing {
+            cursor: pointer;
+
+            &:hover .store-settings__cover-img {
+                opacity: 0.4;
+                transform: scale(1.05);
+            }
+        }
+
+        &-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+
+            &:hover,
+            .store-settings__cover:hover & {
+                opacity: 1;
+            }
+        }
+
+        &-icon-box {
+            background-color: rgba(12, 10, 9, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 1rem;
+            border-radius: 50%;
+            color: #fafaf9;
+            margin-bottom: 0.5rem;
+        }
+
+        &-hint {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fafaf9;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    // 大頭貼
+    &__avatar-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+    }
+
+    &__avatar-wrapper {
+        position: relative;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        background-color: #292524;
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s;
+
+        &--editing {
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.05);
+
+                .store-settings__avatar-overlay {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__avatar-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(12, 10, 9, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+        color: #fafaf9;
+    }
+
+    // 佈局格線
+    &__grid {
+        padding-top: 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+
+        @include respond-to('md') {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    &__main-col {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    // 卡片區塊
+    &__section {
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    &__section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid $seller-border;
+    }
+
+    &__section-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #fafaf9;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        &::before {
+            content: '';
+            width: 0.25rem;
+            height: 1.25rem;
+            background-color: $seller-accent;
+            border-radius: 1rem;
+        }
+    }
+
+    &__edit-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #292524;
+        border: 1px solid #44403c;
+        border-radius: 0.75rem;
+        color: $seller-accent;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            background-color: #44403c;
+            border-color: $seller-accent;
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    // 表單元素
+    &__field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $seller-text-muted;
+    }
+
+    &__value {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #fafaf9;
+        padding: 0.25rem 0;
+        min-height: 1.5rem;
+
+        &--long-text {
+            line-height: 1.8;
+            color: #d6ccc2;
+            word-break: break-all;
+        }
+    }
+
+    &__input,
+    &__textarea {
+        width: 100%;
+        background-color: $seller-input-bg;
+        border: 1px solid $seller-border;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #fafaf9;
+        transition: all 0.2s;
+        line-height: 1.6;
+
+        &:focus {
+            outline: none;
+            border-color: $seller-accent;
+            box-shadow: 0 0 0 1px $seller-accent;
+        }
+    }
+
+    &__textarea {
+        resize: none;
+    }
+
+    // 按鈕區
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-top: 1rem;
+    }
+
+    &__btn {
+        padding: 0.625rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        border: 1px solid transparent;
+        outline: none;
+
+        &:active {
+            transform: scale(0.97);
+        }
+
+        &--ghost {
+            color: $seller-text-muted;
+            background-color: #292524;
+            border-color: #44403c;
+
+            &:hover {
+                color: #fafaf9;
+                background-color: #44403c;
+                border-color: #57534e;
+            }
+        }
+
+        &--primary {
+            background-color: $seller-accent;
+            color: #022c22;
+            box-shadow: 0 4px 12px rgba($seller-accent, 0.15);
+
+            &:hover {
+                background-color: #34d399;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba($seller-accent, 0.25);
+            }
+
+            &:active {
+                transform: translateY(0) scale(0.97);
+            }
+        }
+    }
+
+    // 側邊狀態清單
+    &__status-card {
+        background-color: $seller-card-bg;
+        border: 1px solid $seller-border;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    &__status-header {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: $seller-text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1.5rem;
+    }
+
+    &__status-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.875rem;
+        padding: 0.75rem 0;
+
+        &-label {
+            color: #d6ccc2;
+        }
+
+        &-value {
+            color: #fafaf9;
+        }
+
+        &-meta {
+            color: #78716c;
+        }
+
+        &--divider {
+            border-top: 1px solid $seller-border;
+            margin: 0.5rem 0;
+            padding: 0;
+        }
+    }
+
+    &__switch {
+        width: 3rem;
+        height: 1.5rem;
+        background-color: #44403c; // 預設 Stone 700 (休息)
+        border: 1px solid #57534e;
+        border-radius: 1rem;
+        position: relative;
+        transition: all 0.3s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0.25rem;
+            top: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            background-color: #78716c;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &.active {
+            background-color: #064e3b; // 營業中 Emerald 900
+            border-color: #047857;
+
+            &::after {
+                left: calc(100% - 1.25rem);
+                background-color: #34d399; // Emerald 400
+            }
+        }
+
+        &--editable {
+            cursor: pointer;
+
+            &:hover {
+                border-color: $seller-accent;
+                box-shadow: 0 0 8px rgba($seller-accent, 0.2);
+            }
+        }
+    }
+}
+
+// 🚀 裁切對話框樣式 (貼在 _storeSettings.scss 最下方)
+.crop-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000; // 確保在最上層
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.85); // 稍微加深遮罩背景
+    backdrop-filter: blur(8px);
+    padding: 1.25rem;
+
+    &__content {
+        background-color: #1c1917; // 使用賣家中心的 Stone 900 深色
+        width: 100%;
+        max-width: 30rem;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        border: 1px solid #292524;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    &__container {
+        position: relative;
+        width: 100%;
+        height: 22rem; // 增加高度，裁切橫幅時更好操作
+        border-radius: 1rem;
+        overflow: hidden;
+        background-color: #0c0a09;
+        margin-bottom: 1.5rem;
+        border: 1px solid #292524;
+    }
+
+    &__controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    &__slider {
+        width: 100%;
+        accent-color: #10b981; // 使用你的 Emerald 500 綠色
+        cursor: pointer;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+
+        button {
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .btn-cancel {
+            background: #292524;
+            color: #a8a29e;
+            border: 1px solid #44403c;
+
+            &:hover {
+                background: #44403c;
+                color: #fafaf9;
+            }
+        }
+
+        .btn-save {
+            background: #10b981; // 使用賣家中心的綠色按鈕
+            color: #022c22;
+
+            &:hover {
+                background: #34d399;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            }
+
+            &:active {
+                transform: scale(0.97);
+            }
+        }
+    }
+}

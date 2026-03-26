@@ -1,3 +1,403 @@
-.page-profile {
-    background-color: wheat;
+// src/scss/pagesScss/_profile.scss
+@use '../variables/color' as *;
+
+.profile-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $bg-neutral-warm; // 同步 Tailwind bg-background-light (#F4F0EB)
+
+    &__main {
+        flex: 1;
+        max-width: 1280px; // Tailwind max-w-7xl
+        width: 100%;
+        margin: 0 auto;
+        padding: 3rem 1.5rem; // Tailwind py-12 px-6
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem; // Tailwind gap-10
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            padding: 3rem 5rem; // Tailwind md:px-20
+            align-items: flex-start;
+        }
+    }
+}
+
+// 側邊欄設計 (Sidebar)
+.profile-sidebar {
+    width: 100%;
+    flex-shrink: 0;
+
+    @media (min-width: 768px) {
+        width: 16rem; // Tailwind w-64
+        position: sticky;
+        top: 7rem; // Tailwind top-28
+    }
+
+    &__card {
+        background: white;
+        border-radius: 1.5rem; // Tailwind rounded-3xl
+        padding: 1.5rem; // Tailwind p-6
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // Tailwind shadow-sm
+        border: 1px solid rgba(214, 204, 194, 0.5); // Tailwind border-neutral-warm/50
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 1rem; // Tailwind gap-4
+        margin-bottom: 2rem; // Tailwind mb-8
+    }
+
+    &__avatar-placeholder {
+        width: 3rem; // Tailwind w-12
+        height: 3rem; // Tailwind h-12
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.1); // Tailwind bg-primary/10 (假設 indigo)
+        color: #6366f1; // Tailwind text-primary
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.25rem; // Tailwind text-xl
+    }
+
+    &__name {
+        font-weight: 700;
+        color: $text-main;
+        font-size: 1rem;
+    }
+
+    &__status {
+        font-size: 0.75rem; // Tailwind text-xs
+        color: $text-muted;
+    }
+}
+
+// 側邊選單 (Nav)
+.profile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; // Tailwind space-y-2
+
+    &__item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 0.75rem; // Tailwind gap-3
+        padding: 0.75rem 1rem; // Tailwind px-4 py-3
+        border-radius: 0.75rem; // Tailwind rounded-xl
+        color: $text-muted;
+        transition: colors 0.2s ease;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1rem;
+
+        &:hover {
+            background: rgba(214, 204, 194, 0.3); // Tailwind hover:bg-neutral-warm/30
+        }
+
+        &--active {
+            background: rgba(99, 102, 241, 0.05); // Tailwind bg-primary/5
+            color: #6366f1; // Tailwind text-primary
+            font-weight: 500;
+        }
+    }
+
+    &__icon {
+        width: 1.25rem; // Tailwind w-5
+        height: 1.25rem; // Tailwind h-5
+    }
+
+    &__divider {
+        height: 1px;
+        background: rgba(214, 204, 194, 0.5); // Tailwind bg-neutral-warm/50
+        margin: 1rem 0; // Tailwind my-4
+    }
+
+    &__logout {
+        @extend .profile-nav__item;
+        color: #ef4444; // Tailwind text-red-500
+        font-weight: 500; // Tailwind font-medium
+
+        &:hover {
+            background: #fef2f2; // Tailwind hover:bg-red-50
+        }
+    }
+}
+
+// 右側內容區 (Main Content)
+.profile-content {
+    flex: 1;
+
+    &__card {
+        background: white;
+        border-radius: 1.5rem; // Tailwind rounded-3xl
+        padding: 2rem; // Tailwind p-8
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // Tailwind shadow-sm
+        border: 1px solid rgba(214, 204, 194, 0.5); // Tailwind border-neutral-warm/50
+
+        @media (min-width: 768px) {
+            padding: 2.5rem; // Tailwind md:p-10
+        }
+    }
+
+    &__title {
+        font-size: 1.5rem; // Tailwind text-2xl
+        font-weight: 700;
+        color: $text-main;
+        margin-bottom: 2rem; // Tailwind mb-8
+        font-family: inherit; // Tailwind font-display
+    }
+}
+
+// 大頭貼上傳
+.avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; // Tailwind gap-6
+    margin-bottom: 2.5rem; // Tailwind mb-10
+    padding-bottom: 2.5rem; // Tailwind pb-10
+    border-bottom: 1px solid rgba(214, 204, 194, 0.5); // Tailwind border-b border-neutral-warm/50
+
+    &__preview {
+        position: relative;
+        width: 8rem; // Tailwind w-24
+        height: 8rem; // Tailwind h-24
+        border-radius: 50%;
+        overflow: hidden;
+        background: rgba(214, 204, 194, 0.3); // Tailwind bg-neutral-warm/30
+        cursor: pointer;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // Tailwind shadow-sm
+
+        &:hover .avatar-upload__overlay {
+            opacity: 1;
+        }
+    }
+
+    &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4); // Tailwind bg-black/40
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &__icon {
+        color: white;
+        width: 1.5rem; // Tailwind w-6
+        height: 1.5rem; // Tailwind h-6
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__label {
+        font-weight: 500;
+        color: $text-main;
+        margin-bottom: 0.25rem; // Tailwind mb-1
+    }
+
+    &__hint {
+        font-size: 0.875rem; // Tailwind text-sm
+        color: $text-muted;
+        margin-bottom: 0.75rem; // Tailwind mb-3
+    }
+
+    &__btn {
+        width: fit-content;
+        padding: 0.5rem 1rem; // Tailwind px-4 py-2
+        background: rgba(214, 204, 194, 0.3); // Tailwind bg-neutral-warm/30
+        border: none;
+        border-radius: 0.75rem; // Tailwind rounded-xl (12px)
+        font-size: 0.875rem; // Tailwind text-sm
+        font-weight: 500;
+        color: $text-main;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: rgba(214, 204, 194, 0.5); // Tailwind hover:bg-neutral-warm/50
+        }
+    }
+}
+
+// 表單網格設計
+.profile-form {
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem; // Tailwind gap-8
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(2, 1fr); // Tailwind md:grid-cols-2
+        }
+    }
+
+    &__actions {
+        margin-top: 2.5rem; // Tailwind mt-10
+        padding-top: 2rem; // Tailwind pt-8
+        border-top: 1px solid rgba(214, 204, 194, 0.5); // Tailwind border-t border-neutral-warm/50
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem; // Tailwind gap-4
+    }
+}
+
+// 表單輸入項
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; // Tailwind space-y-2
+
+    &__label {
+        font-size: 0.875rem; // Tailwind text-sm
+        font-weight: 500; // Tailwind font-medium
+        color: $text-main;
+    }
+
+    &__input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: $bg-light; // Tailwind bg-background-light
+        border: 1px solid rgba(214, 204, 194, 0.5); // Tailwind border-neutral-warm/50
+        border-radius: 0.75rem; // Tailwind rounded-xl
+        transition: all 0.2s ease;
+
+        &:focus-within {
+            border-color: rgba(99, 102, 241, 0.5); // Tailwind focus:border-primary/50
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.5); // Tailwind focus:ring-1 focus:ring-primary/50
+        }
+    }
+
+    &__icon {
+        position: absolute;
+        left: 1rem; // Tailwind pl-4
+        width: 1.25rem; // Tailwind w-5
+        height: 1.25rem; // Tailwind h-5
+        color: $text-muted;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.75rem; // Tailwind pl-11 pr-4 py-3
+        background: transparent;
+        border: none;
+        border-radius: 0.75rem;
+        color: $text-main;
+        font-size: 1rem;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:disabled {
+            background: rgba(214, 204, 194, 0.1);
+            cursor: not-allowed;
+            color: $text-muted;
+        }
+    }
+}
+
+// 按鈕設計
+.btn-cancel {
+    padding: 0.75rem 1.5rem; // Tailwind px-6 py-3
+    border-radius: 0.75rem; // Tailwind rounded-xl
+    font-weight: 500;
+    color: $text-muted;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background: rgba(214, 204, 194, 0.3); // Tailwind hover:bg-neutral-warm/30
+    }
+}
+
+.btn-save {
+    padding: 0.75rem 1.5rem; // Tailwind px-6 py-3
+    border-radius: 0.75rem; // Tailwind rounded-xl
+    font-weight: 500;
+    background: #6366f1; // Tailwind bg-primary
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2), 0 4px 6px -4px rgba(99, 102, 241, 0.2); // Tailwind shadow-lg shadow-primary/20
+    transition: background-color 0.2s;
+
+    &:hover {
+        background: rgba(99, 102, 241, 0.9); // Tailwind hover:bg-primary/90
+    }
+}
+
+// 🚀 裁切對話框樣式 (貼在 _profile.scss 最下方)
+.crop-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85); // 深色背景遮罩
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+
+    &__content {
+        background: white;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    &__container {
+        position: relative;
+        width: 100%;
+        height: 350px; // 裁切區域高度
+        background: #222;
+    }
+
+    &__controls {
+        padding: 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        background: #fff;
+    }
+
+    &__slider {
+        width: 100%;
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        outline: none;
+        accent-color: #6366f1; // 統一主色調
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #f3f4f6;
+    }
 }

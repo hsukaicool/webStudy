@@ -36,7 +36,7 @@ export default function Checkout() {
 
       // 2. 傳送包裝好的 payload
       await orderApi.createOrder(payload);
-      alert('🎉 訂單建立成功！');
+      
       navigate('/orders');
     } catch (error) {
       console.error("下單失敗:", error);

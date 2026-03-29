@@ -136,7 +136,7 @@ export default function Orders() {
               </div>
 
               {/* 操作按鈕 */}
-              <div className="seller-orders__item-footer">
+              {/* <div className="seller-orders__item-footer">
                 <button className="seller-orders__btn seller-orders__btn--secondary">
                   <MessageSquare size={16} />
                   聯絡買家
@@ -154,7 +154,7 @@ export default function Orders() {
                     安排出貨
                   </button>
                 )}
-              </div>
+              </div>*/}
             </div>
           ))
         ) : (

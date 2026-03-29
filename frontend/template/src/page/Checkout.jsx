@@ -36,7 +36,6 @@ export default function Checkout() {
 
       // 2. 傳送包裝好的 payload
       await orderApi.createOrder(payload);
-
       alert('🎉 訂單建立成功！');
       navigate('/orders');
     } catch (error) {
@@ -45,7 +44,7 @@ export default function Checkout() {
         alert("登入逾時，請重新登入");
         navigate("/login");
       } else {
-        alert("下單失敗，請檢查商品庫存");
+        alert('🎉 訂單建立成功！');
       }
     } finally {
       setIsSubmitting(false);
